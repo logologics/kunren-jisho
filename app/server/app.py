@@ -1,20 +1,26 @@
 from fastapi import FastAPI
-import httpx
-app = FastAPI()
+from .routers import oauth, db, jisho
 
-jisho = 'https://jisho.org/api/v1/search/words?keyword='
+app = FastAPI()
 
 @app.get("/")
 async def welcome():
     return {"welcome"}
 
+app.include_router(
+    oauth.router,
+    prefix="/oauth",
+)
 
-@app.get("/search/{query}")
-async def search(query: str):
-  async with httpx.AsyncClient() as client:
-    r = await client.get(jisho + query)
-    return {"query": r.json()}
+app.include_router(
+    jisho.router,
+    prefix="/jisho",
+)
 
-@app.put("/store/{word}")
-async def store(word: str):
-    return {"welcome"}
+app.include_db(
+    db.router,
+    prefix="/oauth",
+)
+
+
+

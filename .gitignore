@@ -50,3 +50,7 @@ coverage.xml
 
 # Django stuff:
 *.log
+
+#env
+.env
+oauth.secret.json
